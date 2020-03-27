@@ -13,7 +13,7 @@ if(isset($_POST['btLogin'])) {
 		$login = mysqli_real_escape_string($mysql,$_POST['login']);
 		$pwd = $_POST['pwd'];
 		
-		$query = "SELECT nom, password FROM `membres` WHERE nom='$login'";
+		$query = "SELECT nom, password, statut FROM `membres` WHERE nom='$login'";
 		
 		$result = mysqli_query($mysql, $query);
 		
@@ -30,7 +30,12 @@ if(isset($_POST['btLogin'])) {
 			$_SESSION['login'] = $login;
 			
 			//Rediriger vers l'administration
-			header('Location: '.SITE_URL.'/admin/index.php');
+			if($user['statut']=='admin') {
+				header('Location: '.SITE_URL.'/admin/index.php');
+			} else {
+				header('Location: '.SITE_URL.'/index.php');
+			}
+			
 			header('Status: 302 Temporary');
 			exit;
 		} else {
@@ -43,6 +48,10 @@ if(isset($_POST['btLogin'])) {
 } elseif(isset($_POST['btLogout'])) {	//Déconnexion
 	unset($_SESSION['login']);
 	session_destroy();
+	
+	header('Location: '.SITE_URL.'/index.php');
+	header('Status: 302 Temporary');
+	exit;
 } else {	//Je viens d'arriver
 	$message = 'Bienvenue';
 }

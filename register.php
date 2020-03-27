@@ -47,7 +47,7 @@ if(isset($_POST['btSignin'])) {
 					$_SESSION['login'] = $login;
 					
 					//Rediriger vers le formulaire de connexion
-					header('Location: '.SITE_URL.'/admin/index.php');
+					header('Location: '.SITE_URL.'/index.php');
 					header('Status: 302 Temporary');
 					exit;
 				} else {
