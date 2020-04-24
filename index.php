@@ -2,25 +2,22 @@
 session_start();
 
 require 'config.php';
-?>
-<!doctype html>
-<html lang="fr">
-<head>
-<meta charset="utf-8">
-<title>Accueil - Biblioweb</title>
-<link rel="stylesheet" href="design/style.css">
 
-<!-- Bootstrap -->
-<link rel="stylesheet" href="modules/bootstrap-4.4.1/css/bootstrap.min.css">
-</head>
-<body>
+$title = "Accueil - Biblioweb";
+?>
+
+<?php include "inc/header.inc.php" ?>
 <div class="container-fluid">
   <header class="row">
 		<div class="col-4">
 			LOGO
 		</div>
 		<nav class="col-8">
-			MENU: Accueil | Profil | Contact | Admin
+			MENU: Accueil | 
+		<?php if(isset($_SESSION['login'])) { ?>	
+			<a href="profil.php">Profil</a> |
+		<?php } ?>	
+			Contact | Admin
 		</nav>
   </header>
   <div class="row">
@@ -60,12 +57,4 @@ require 'config.php';
 	</div>
   </footer>
 </div>
-
-<!-- Bootstrap -->
-<script src="modules/jquery/jquery-3.4.1.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-
-<script src="modules/bootstrap-4.4.1/js/bootstrap.min.js"></script>
-<script src="lib/functions.js"></script>
-</body>
-</html>
+<?php include "inc/footer.inc.php" ?>

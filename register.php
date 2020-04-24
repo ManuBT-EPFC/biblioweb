@@ -4,35 +4,37 @@ session_start();
 $message = '';
 
 require 'config.php';
+require 'utils/validators.php';
 
-function validerPassword($mdp) {
-	//Règles de validation: longueur 8, 1 majuscules, 1 chiffre
-	if(strlen($mdp)>=8 && preg_match('/.*[0-9]{1,}.*/',$mdp)
-		&& preg_match('/.*[A-Z]{1,}.*/',$mdp)) {
-		return true;
-	}
-	
-	return false;
-}
+$title = "Biblioweb - Inscription";
+
+$extra_css = '<link rel="stylesheet" href="register_style.css">';
+$extra_js = '<script src="register.js"></script>';
 
 if(isset($_POST['btSignin'])) {
-	if(!empty($_POST['login']) && !empty($_POST['pwd']) && !empty($_POST['confPwd'])) {
+	if(!empty($_POST['login']) 
+		&& !empty($_POST['pwd']) 
+		&& !empty($_POST['confPwd']) 
+		&& !empty($_POST['email'])) {
 		//Récupérer les données envoyées
 		$login = $_POST['login'];
 		$pwd = $_POST['pwd'];
 		$confPwd = $_POST['confPwd'];
+		$email = $_POST['email'];
 		
 		//Validation des données
-		if(validerPassword($pwd)) {
+		if(validerPassword($pwd) 
+			&& filter_var($email,FILTER_VALIDATE_EMAIL)) {
 			if($pwd===$confPwd) {
 				//Inscrire le membre
 				//Se connecter à la db
 				$mysql = mysqli_connect(HOSTNAME, USERNAME, PASSWORD, DATABASE);
 				
 				$login = mysqli_real_escape_string($mysql,$login);
+				$email = mysqli_real_escape_string($mysql,$email);
 				$pwd = password_hash($_POST['pwd'],PASSWORD_BCRYPT);
 				
-				$query = "INSERT INTO `membres` (`id`, `nom`, `dateInscr`, `statut`, `password`) VALUES (NULL, '$login', NOW(), 'novice', '$pwd');";
+				$query = "INSERT INTO `users` (`id`, `login`, `created_at`, `statut`, `password`,`email`) VALUES (NULL, '$login', NOW(), 'novice', '$pwd', '$email');";
 				
 				$result = mysqli_query($mysql, $query);
 				
@@ -66,14 +68,17 @@ if(isset($_POST['btSignin'])) {
 	}
 }
 ?>
-<!DOCTYPE html>
-<html>
+<?php include "inc/header.inc.php" ?>
 <div><?= $message; ?></div>
 <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
 	<fieldset><legend>Inscription</legend>
 		<div>
 			<label>Login</label>
 			<input type="text" name="login" value="" required>
+		</div>
+		<div>
+			<label>Email</label>
+			<input type="email" name="email" value="" required>
 		</div>
 		<div>
 			<label>Password</label>
@@ -86,4 +91,4 @@ if(isset($_POST['btSignin'])) {
 		<button name="btSignin">S'inscrire</button>
 	</fieldset>
 </form>
-</html>
+<?php include "inc/footer.inc.php" ?>

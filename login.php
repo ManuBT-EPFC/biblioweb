@@ -13,7 +13,7 @@ if(isset($_POST['btLogin'])) {
 		$login = mysqli_real_escape_string($mysql,$_POST['login']);
 		$pwd = $_POST['pwd'];
 		
-		$query = "SELECT nom, password, statut FROM `membres` WHERE nom='$login'";
+		$query = "SELECT login, password, statut FROM `users` WHERE login='$login'";
 		
 		$result = mysqli_query($mysql, $query);
 		
